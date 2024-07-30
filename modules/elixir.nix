@@ -5,7 +5,7 @@ in with lib; {
     elixir = {
       enabled = mkOption {
         type = types.bool;
-        default = true;
+        default = false;
         description = ''
           Whether to include elixir packages in the development environment.
         '';

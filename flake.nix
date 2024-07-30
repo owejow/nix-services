@@ -1,6 +1,6 @@
 {
-  description = "A flake for phoenix server development";
+  description = "A flake for managing services in a development environment";
 
-  outputs = _: { lib = import ./lib.nix; };
+  outputs = _: { utils = import ./utils.nix; };
 
 }
