@@ -1,6 +1,9 @@
 {
   description = "A flake for managing services in a development environment";
 
-  outputs = _: { utils = import ./utils.nix; };
+  outputs = _: {
+    utils = import ./utils.nix;
+    exampleConfigs = import ./example-configs.nix;
+  };
 
 }
