@@ -11,14 +11,14 @@ in {
         '';
       };
       user = lib.mkOption {
-        type = lib.types.string;
+        type = lib.types.str;
         default = "postgres";
         description = ''
           The name of the postgres user.
         '';
       };
       password = lib.mkOption {
-        type = lib.types.string;
+        type = lib.types.str;
         default = "postgres";
         description = ''
           The password for the postgres user (For dev only!).
@@ -26,7 +26,7 @@ in {
       };
 
       dbName = lib.mkOption {
-        type = lib.types.string;
+        type = lib.types.str;
         default = "postgres";
         description = ''
           The name of the postgres database
@@ -55,31 +55,27 @@ in {
         fi
 
         # Don't try to start postgres if it is already running
-        if test -f $PGDATA/postmaster.pid; then
-          exit 1
+        if ! test -f $PGDATA/postmaster.pid; then
+          pg_ctl                                                  \
+            -D $PGDATA                                            \
+            -l $PGDATA/postgres.log                               \
+            -o "-c unix_socket_directories='$PGDATA'"             \
+            -o "-c listen_addresses='*'"                          \
+            -o "-c log_destination='stderr'"                      \
+            -o "-c logging_collector=on"                          \
+            -o "-c log_directory='log'"                           \
+            -o "-c log_filename='postgresql-%Y-%m-%d_%H%M%S.log'" \
+            -o "-c log_min_messages=info"                         \
+            -o "-c log_min_error_statement=info"                  \
+            -o "-c log_connections=on"                            \
+            start
         fi
-
-        pg_ctl                                                  \
-          -D $PGDATA                                            \
-          -l $PGDATA/postgres.log                               \
-          -o "-c unix_socket_directories='$PGDATA'"             \
-          -o "-c listen_addresses='*'"                          \
-          -o "-c log_destination='stderr'"                      \
-          -o "-c logging_collector=on"                          \
-          -o "-c log_directory='log'"                           \
-          -o "-c log_filename='postgresql-%Y-%m-%d_%H%M%S.log'" \
-          -o "-c log_min_messages=info"                         \
-          -o "-c log_min_error_statement=info"                  \
-          -o "-c log_connections=on"                            \
-          start
-
-        exit 0
       '';
 
     stopService =
       # bash
       ''
-        if test -d $PGDATA; then
+        if test -f $PGDATA/postmaster.pid; then
           pg_ctl -D $PGDATA -U postgres stop
         fi
       '';

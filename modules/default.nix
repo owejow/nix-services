@@ -1,5 +1,5 @@
 { pkgs, lib, config, ... }: {
-  imports = [ ./elixir.nix ./postgres.nix ];
+  imports = [ ./stripe-mock ./elixir.nix ./postgres.nix ];
 
   options = {
     # These options can be configured in each module
