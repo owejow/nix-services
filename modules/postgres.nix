@@ -13,5 +13,18 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enabled { buildInputs = [ pkgs.postgresql_16 ]; };
+  config = lib.mkIf cfg.enabled {
+    buildInputs = [
+      pkgs.postgresql_16
+      (pkgs.writeShellApplication {
+        name = "show-nixos-org";
+
+        runtimeInputs = [ pkgs.curl pkgs.w3m ];
+
+        text = ''
+          curl -s 'https://nixos.org' | w3m -dump -T text/html
+        '';
+      })
+    ];
+  };
 }
