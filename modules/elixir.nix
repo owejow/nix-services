@@ -23,7 +23,7 @@ in {
   };
 
   config = lib.mkIf cfg.enabled {
-    buildInputs = [
+    moduleBuildInputs = [
       pkgs.erlang_26
       pkgs.beam.packages.erlang_26.elixir_1_14
 

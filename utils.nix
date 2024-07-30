@@ -5,5 +5,5 @@
       specialArgs = { inherit pkgs; };
     })
       config;
-  in pkgs.mkShell { inherit (config) buildInputs; };
+  in pkgs.mkShell { inherit (config) buildInputs shellHook; };
 }
