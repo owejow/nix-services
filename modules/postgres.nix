@@ -79,7 +79,9 @@ in {
     stopService =
       # bash
       ''
-        pg_ctl -D $PGDATA -U postgres stop
+        if test -d $PGDATA; then
+          pg_ctl -D $PGDATA -U postgres stop
+        fi
       '';
   };
 }

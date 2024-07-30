@@ -11,13 +11,11 @@ in {
         '';
       };
 
-      fileWatcherUtils = {
-        enabled = lib.mkOption {
-          type = lib.types.bool;
-          default = false;
-          description =
-            "Whether to include file watcher utils for Phoenix development";
-        };
+      enableFileWatchers = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description =
+          "Whether to include file watcher utils for Phoenix development";
       };
     };
   };
@@ -27,7 +25,7 @@ in {
       pkgs.erlang_26
       pkgs.beam.packages.erlang_26.elixir_1_14
 
-    ] ++ lib.optionals cfg.fileWatcherUtils.enabled
+    ] ++ lib.optionals cfg.enableFileWatchers
       (lib.optionals pkgs.stdenv.isLinux [
         # For ExUnit Notifier on Linux.
         pkgs.libnotify
@@ -45,5 +43,18 @@ in {
         pkgs.darwin.apple_sdk.frameworks.CoreFoundation
         pkgs.darwin.apple_sdk.frameworks.CoreServices
       ]);
+
+    setup =
+      # bash
+      ''
+        # Put mix related data in nix shell dir
+        export MIX_HOME=$NIX_SHELL_DIR/.mix
+        export MIX_ARCHIVES=$MIX_HOME/archives
+        export HEX_HOME=$NIX_SHELL_DIR/.hex
+
+        export PATH=$MIX_HOME/bin:$PATH
+        export PATH=$HEX_HOME/bin:$PATH
+        export PATH=$MIX_HOME/escripts:$PATH
+      '';
   };
 }
