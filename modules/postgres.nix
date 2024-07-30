@@ -10,6 +10,12 @@ in {
           Whether to include postgres in the development environment.
         '';
       };
+
+      package = lib.mkOption {
+        type = lib.types.package;
+        default = pkgs.postgresql_16;
+      };
+
       user = lib.mkOption {
         type = lib.types.str;
         default = "postgres";
@@ -17,6 +23,7 @@ in {
           The name of the postgres user.
         '';
       };
+
       password = lib.mkOption {
         type = lib.types.str;
         default = "postgres";
@@ -37,7 +44,7 @@ in {
   };
 
   config = lib.mkIf cfg.enabled {
-    moduleBuildInputs = [ pkgs.postgresql_16 ];
+    moduleBuildInputs = [ cfg.package ];
     setup =
       # bash
       ''

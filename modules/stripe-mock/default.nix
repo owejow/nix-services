@@ -1,7 +1,5 @@
 { pkgs, lib, config, ... }:
-let
-  cfg = config.stripe-mock;
-  stripe-mock = pkgs.callPackage ./stripe-mock.nix { };
+let cfg = config.stripe-mock;
 in {
   options = {
     stripe-mock = {
@@ -12,11 +10,16 @@ in {
           Whether to include stripe-mock in the development environment
         '';
       };
+
+      package = lib.mkOption {
+        type = lib.types.package;
+        default = pkgs.callPackage ./stripe-mock.nix { };
+      };
     };
   };
 
   config = lib.mkIf cfg.enabled {
-    moduleBuildInputs = [ stripe-mock ];
+    moduleBuildInputs = [ cfg.package ];
     setup =
       # bash
       ''

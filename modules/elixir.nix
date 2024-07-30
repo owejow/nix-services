@@ -6,9 +6,18 @@ in {
       enabled = lib.mkOption {
         type = lib.types.bool;
         default = false;
-        description = ''
-          Whether to include elixir packages in the development environment.
-        '';
+        description =
+          "Whether to include elixir packages in the development environment.";
+      };
+
+      package = lib.mkOption {
+        type = lib.types.package;
+        default = pkgs.beam.packages.erlang_26.elixir_1_14;
+      };
+
+      erlPackage = lib.mkOption {
+        type = lib.types.package;
+        default = pkgs.erlang_26;
       };
 
       enableFileWatchers = lib.mkOption {
@@ -21,11 +30,8 @@ in {
   };
 
   config = lib.mkIf cfg.enabled {
-    moduleBuildInputs = [
-      pkgs.erlang_26
-      pkgs.beam.packages.erlang_26.elixir_1_14
-
-    ] ++ lib.optionals cfg.enableFileWatchers
+    moduleBuildInputs = [ cfg.package cfg.erlPackage ]
+      ++ lib.optionals cfg.enableFileWatchers
       (lib.optionals pkgs.stdenv.isLinux [
         # For ExUnit Notifier on Linux.
         pkgs.libnotify
