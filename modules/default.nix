@@ -1,6 +1,6 @@
 { lib, ... }:
 with lib; {
-  imports = [ ./elixir.nix ];
+  imports = [ ./elixir.nix ./postgres.nix ];
 
   options = {
     buildInputs = mkOption {
