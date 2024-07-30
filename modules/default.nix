@@ -2,6 +2,18 @@
   imports = [ ./stripe-mock ./elixir.nix ./postgres.nix ];
 
   options = {
+    extraBuildInputs = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+      default = [ ];
+      description = "Extra packages to include in the dev environment";
+    };
+
+    extraShellHook = lib.mkOption {
+      type = lib.types.lines;
+      default = "";
+      description = "Extra bash script to run during the shellHook";
+    };
+
     # These options can be configured in each module
     moduleBuildInputs = lib.mkOption {
       type = lib.types.listOf lib.types.package;
@@ -40,7 +52,7 @@
   };
 
   config = {
-    buildInputs = config.moduleBuildInputs ++ [
+    buildInputs = config.moduleBuildInputs ++ config.extraBuildInputs ++ [
       (pkgs.writeShellScriptBin "startServices" "${config.startService}")
       (pkgs.writeShellScriptBin "stopServices" "${config.stopService}")
     ];
@@ -55,7 +67,7 @@
 
         export NIX_SHELL_DIR=$PWD/.nix-shell
 
-      '' + config.setup;
+      '' + config.setup + config.extraShellHook;
 
   };
 }
