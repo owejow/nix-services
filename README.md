@@ -1,12 +1,15 @@
 # Nix Services
-Nix Services is a flake designed to help you manage services in your development environment. 
+
+Nix Services is a flake designed to help you manage services in your development environment.
 Nix services will group all of your enabled services into a single command: `startServices`.
-This will allow you to start all necessary services at once. You can later run  `stopServices`
+This will allow you to start all necessary services at once. You can later run `stopServices`
 to stop all running services. Currently this is built for Phoenix development, but it can be
 expanded to work for any type of develpment that requires services to be running.
 
 ## Setup
+
 Here is a simple nix flake that will set up a development environment for Phoenix
+
 ```nix
 {
   description = "A flake for phoenix server development";
@@ -31,6 +34,7 @@ Here is a simple nix flake that will set up a development environment for Phoeni
 ```
 
 This is equivalent to:
+
 ```nix
 {
   description = "A flake for phoenix server development";
@@ -58,6 +62,7 @@ This is equivalent to:
 ```
 
 ## Usage
+
 - `startServices`: Starts all enabled services
 - `stopServices`: Stops all running services
 
@@ -69,5 +74,6 @@ Note:
 This is compatible with `dir-env`
 
 ## Coming Soon
+
 - Documentation of the available modules
 - Developer documentation for configuring additional services
